@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Crypto Store</title>
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white flex flex-col items-center justify-center min-h-screen p-4">
+  <h1 class="text-4xl font-bold mb-6">Crypto Store</h1>
+  <button onclick="connect()" class="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg text-lg transition">Connect Wallet</button>
+  <p id="msg" class="mt-6 text-xl"></p>
+
+  <!-- Ethers.js CDN -->
+  <script src="https://cdn.ethers.io/lib/ethers-5.6.umd.min.js"></script>
+  <script>
+    let contract;
+
+    async function connect() {
+      if (!window.ethereum) {
+        alert("Please install MetaMask!");
+        return;
+      }
+
+      await window.ethereum.request({ method: "eth_requestAccounts" });
+
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+
+      const contractAddress = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"; // Ganti dengan alamat kontrak kamu
+      const abi = [
+        "function message() view returns (string)",
+        "function setMessage(string _msg)"
+      ];
+
+      contract = new ethers.Contract(contractAddress, abi, signer);
+
+      const msg = await contract.message();
+      document.getElementById("msg").innerText = `Pesan dari kontrak: ${msg}`;
+    }
+  </script>
+</body>
+</html>
