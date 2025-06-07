@@ -1,0 +1,113 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>History</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+  </head>
+  <body class="bg-gray-100 min-h-screen flex flex-col items-center p-6">
+    <header
+      class="mb-8 w-full max-w-3xl flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0"
+    >
+      <h1 class="text-2xl font-bold mb-4 text-blue-700">
+        Riwayat Transaksi Anda
+      </h1>
+      <nav
+        class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 items-center"
+      >
+        <a href="#" class="text-gray-700 hover:text-blue-700 font-medium"
+          >Home</a
+        >
+        <a
+          href="store.html"
+          class="text-gray-700 hover:text-blue-700 font-medium"
+          >Store</a
+        >
+        <a href="#" class="text-gray-700 hover:text-blue-700 font-medium"
+          >About</a
+        >
+        <a
+          href="history.html"
+          class="text-gray-700 hover:text-blue-700 font-medium"
+          >History</a
+        >
+      </nav>
+      <button
+        id="connectBtn"
+        class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+      >
+        Connect Wallet
+      </button>
+    </header>
+
+    <div id="history" class="space-y-4"></div>
+
+    <script src="abi.js"></script>
+    <script>
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      let signer;
+      let account;
+      const contractAddress = "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"; // ganti dengan alamatmu
+      const contract = new ethers.Contract(contractAddress, abi, provider);
+
+      const connectBtn = document.getElementById("connectBtn");
+
+      async function connectWallet() {
+        if (!window.ethereum) {
+          alert("MetaMask tidak terdeteksi!");
+          return;
+        }
+
+        try {
+          await provider.send("eth_requestAccounts", []);
+          signer = provider.getSigner();
+          account = await signer.getAddress();
+          connectBtn.textContent = `${account.slice(0, 6)}...${account.slice(
+            -4
+          )}`;
+          connectBtn.disabled = true;
+          loadRiwayat(); // Load history setelah wallet terhubung
+        } catch (err) {
+          alert("Gagal menghubungkan wallet: " + err.message);
+        }
+      }
+
+      async function loadRiwayat() {
+        try {
+          const riwayat = await contract.getRiwayatPembelian(account);
+          const container = document.getElementById("history");
+
+          if (riwayat.length === 0) {
+            container.innerHTML =
+              "<p class='text-gray-600'>Belum ada transaksi.</p>";
+            return;
+          }
+
+          container.innerHTML = "";
+          riwayat.reverse().forEach((item) => {
+            const div = document.createElement("div");
+            div.className = "bg-white p-4 rounded shadow";
+            div.innerHTML = `
+          <p><strong>Produk:</strong> ${item.namaProduk}</p>
+          <p><strong>Harga:</strong> ${ethers.utils.formatEther(
+            item.jumlahBayar
+          )} ETH</p>
+        `;
+            container.appendChild(div);
+          });
+        } catch (err) {
+          console.error(err);
+          document.getElementById("history").innerHTML =
+            "<p class='text-red-600'>Gagal memuat riwayat transaksi.</p>";
+        }
+      }
+
+      connectBtn.addEventListener("click", connectWallet);
+    </script>
+  </body>
+</html> -->
